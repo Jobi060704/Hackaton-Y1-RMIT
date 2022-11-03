@@ -16,10 +16,16 @@ def search_base(req, att_sel, data):
             part_sugg.append(i)
 
 
-
-
-
     return exact_sugg, part_sugg
+
+
+def print_res(data,att_lst):
+    
+    for i in data:
+        print(f"Index: {i['Index']}")
+        for j in att_lst[1:]:
+            print(f"\t{j}: {i[j]}")
+        print()
 
 
 
@@ -50,10 +56,14 @@ req = str(input("Please select the keyword to search for the data: "))
 ret_ext, ret_part = search_base(req,att_sel,data["PartInformation"])
 
 if ret_ext == [] and ret_part == []:
-    print("No matches!")
+    print("No matches!\n")
     exit()
 elif ret_part == []:
-    print("")
-
-print(ret_ext)
-print(ret_part)
+    print("No partial matches, displaying exact results\n")
+    print_res(ret_ext,att_lst)
+elif ret_ext == []:
+    print("No exact matches, displaying partial results\n")
+    print_res(ret_part,att_lst)
+else:
+    print_res(ret_ext,att_lst)
+    print_res(ret_part,att_lst)
