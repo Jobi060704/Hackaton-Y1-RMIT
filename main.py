@@ -1,6 +1,7 @@
 import json, os
 
 
+# function to search the multi-array
 def search_base(req, att_sel, data):
 
     exact_sugg = []
@@ -20,6 +21,7 @@ def search_base(req, att_sel, data):
     return exact_sugg, part_sugg
 
 
+# function to print all respectable findings
 def print_res(data,att_lst,typ):
     print(f"Displaying findings for {typ} results")
     for i in data:
@@ -29,7 +31,7 @@ def print_res(data,att_lst,typ):
         print()
 
 
-
+# get all .json files in folder
 filepaths = os.listdir()
 corrpath = []
 for i in range(len(filepaths)):
@@ -37,14 +39,14 @@ for i in range(len(filepaths)):
         corrpath.append(filepaths[i])
 
 
-
+# store all PartInfomation data to an array
 all_data = []
 for i in corrpath:
     with open(i) as data_file: full_data = json.load(data_file)["PartInformation"]
     all_data.append(full_data)
 
 
-
+# get option and keyword for search
 att_lst = list(full_data[0].keys())[1:]
 print("Please select the attribute (with num option) to search with:")
 
@@ -54,8 +56,6 @@ for i in att_lst:
     print(f"\t{cnt} - {i}")
 
 inp = int(input("\nSelection: "))
-
-
 
 try:
     att_sel = att_lst[inp]
@@ -67,11 +67,13 @@ req = str(input("Please select the keyword to search for the data: "))
 
 
 
-
+# seach for exact and similar data in the multiarray
 ret_ext, ret_part = search_base(req, att_sel, all_data)
 typ_ext = "exact"
 typ_part = "partial"
 
+
+# selective print of results
 if ret_ext == [] and ret_part == []:
     print("No matches!\n")
     exit()
