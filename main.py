@@ -42,7 +42,7 @@ def print_res(data,att_lst,typ):
     print(f"Displaying findings for {typ} results")
     for i in data:
         print(f"Index: {i['Index']}")
-        for j in att_lst[1:]:
+        for j in att_lst[]:
             print(f"\t{j}: {i[j]}")
         print()
 
@@ -87,6 +87,7 @@ req = str(input("Please select the keyword to search for the data: "))
 ret_ext, ret_part = search_base(req, att_sel, all_data)
 typ_ext = "exact"
 typ_part = "partial"
+print(ret_part)
 
 
 # selective print of results
