@@ -1,26 +1,27 @@
-import json
+import json, os
 
 
 def search_base(req, att_sel, data):
 
-    # exact matching
     exact_sugg = []
-    for i in data:
-        if str(i[att_sel]) == str(req):
-            exact_sugg.append(i)
-
-    # partial matching
     part_sugg = []
-    for i in data:
-        if str(i[att_sel]).find(str(req)) != -1:
-            part_sugg.append(i)
+
+    for f in data:
+
+        for i in f:
+            if str(i[att_sel]) == str(req):
+                exact_sugg.append(i)
+
+        for i in f:
+            if str(i[att_sel]).find(str(req)) != -1:
+                part_sugg.append(i)
 
 
     return exact_sugg, part_sugg
 
 
-def print_res(data,att_lst):
-    
+def print_res(data,att_lst,typ):
+    print(f"Displaying findings for {typ} results")
     for i in data:
         print(f"Index: {i['Index']}")
         for j in att_lst[1:]:
@@ -29,10 +30,22 @@ def print_res(data,att_lst):
 
 
 
-with open('AC2-07337-anon.json') as data_file: data = json.load(data_file)
+filepaths = os.listdir()
+corrpath = []
+for i in range(len(filepaths)):
+    if filepaths[i][-4:] == 'json':
+        corrpath.append(filepaths[i])
 
-att_lst = list(data["PartInformation"][0].keys())
 
+
+all_data = []
+for i in corrpath:
+    with open(i) as data_file: full_data = json.load(data_file)["PartInformation"]
+    all_data.append(full_data)
+
+
+
+att_lst = list(full_data[0].keys())[1:]
 print("Please select the attribute (with num option) to search with:")
 
 cnt = -1
@@ -41,6 +54,8 @@ for i in att_lst:
     print(f"\t{cnt} - {i}")
 
 inp = int(input("\nSelection: "))
+
+
 
 try:
     att_sel = att_lst[inp]
@@ -53,17 +68,20 @@ req = str(input("Please select the keyword to search for the data: "))
 
 
 
-ret_ext, ret_part = search_base(req,att_sel,data["PartInformation"])
+ret_ext, ret_part = search_base(req, att_sel, all_data)
+typ_ext = "exact"
+typ_part = "partial"
 
 if ret_ext == [] and ret_part == []:
     print("No matches!\n")
     exit()
 elif ret_part == []:
     print("No partial matches, displaying exact results\n")
-    print_res(ret_ext,att_lst)
+    print_res(ret_ext,att_lst,typ_ext)
 elif ret_ext == []:
     print("No exact matches, displaying partial results\n")
-    print_res(ret_part,att_lst)
+    print_res(ret_part,att_lst,typ_part)
 else:
-    print_res(ret_ext,att_lst)
-    print_res(ret_part,att_lst)
+    print("Both partial and exact results found, displaying all results\n")
+    print_res(ret_ext,att_lst,typ_ext)
+    print_res(ret_part,att_lst,typ_part)
