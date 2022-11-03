@@ -1,3 +1,19 @@
+"""
+Testing data:
+
+0
+345896
+- all work orders starting with 345896
+
+2
+Left Qtr Panel
+- all records of Left Qtr Panel part present
+
+3
+FRONT
+- all records of tools being placed in the front
+"""
+
 import json, os
 
 
@@ -74,6 +90,7 @@ typ_part = "partial"
 
 
 # selective print of results
+print()
 if ret_ext == [] and ret_part == []:
     print("No matches!\n")
     exit()
