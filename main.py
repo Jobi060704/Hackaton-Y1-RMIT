@@ -42,7 +42,7 @@ def print_res(data,att_lst,typ):
     print(f"Displaying findings for {typ} results")
     for i in data:
         print(f"Index: {i['Index']}")
-        for j in att_lst[]:
+        for j in att_lst:
             print(f"\t{j}: {i[j]}")
         print()
 
